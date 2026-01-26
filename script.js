@@ -11,6 +11,9 @@ window.addEventListener('resize', resizeCanvas)
 
 let balls = []
 
+let mouseDown = false
+let draggedBall = null
+
 class Ball {
   constructor(x, y, radius, color) {
     this.x = x
@@ -22,10 +25,17 @@ class Ball {
   }
 
   draw() {
+    const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy)
+    const angle = Math.atan2(this.vy, this.vx)
+    ctx.save()
+    ctx.translate(this.x, this.y)
+    ctx.rotate(angle)
+    ctx.scale(1 + speed * 0.1, 1 - speed * 0.05)
     ctx.beginPath()
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI)
+    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI)
     ctx.fillStyle = this.color
     ctx.fill()
+    ctx.restore()
   }
 
   update() {
@@ -75,3 +85,40 @@ function loop() {
 }
 
 loop()
+
+canvas.addEventListener('mousedown', (e) => {
+  mouseDown = true
+  const mx = e.clientX
+  const my = e.clientY
+
+  for (let ball of balls) {
+    const dx = mx - ball.x
+    const dy = my - ball.y
+    if (Math.sqrt(dx * dx + dy * dy) < ball.radius) {
+      draggedBall = ball
+      return
+    }
+  }
+  balls.push(
+    new Ball(
+      mx,
+      my,
+      Math.random() * 10 + 10,
+      `hsl(${Math.random() * 360}, 80%, 50%)`,
+    ),
+  )
+})
+
+canvas.addEventListener('mousemove', (e) => {
+  if (draggedBall) {
+    draggedBall.x = e.clientX
+    draggedBall.y = e.clientY
+    draggedBall.vx = e.movementX
+    draggedBall.vy = e.movementY
+  }
+})
+
+canvas.addEventListener('mouseup', () => {
+  mouseDown = false
+  draggedBall = null
+})
