@@ -27,6 +27,27 @@ class Ball {
     ctx.fillStyle = this.color
     ctx.fill()
   }
+
+  update() {
+    balls.forEach((other) => {
+      if (other !== this) {
+        const dx = other.x - this.x
+        const dy = other.y - this.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist > 0) {
+          const force = (0.01 * (this.radius * other.radius)) / (dist * dist)
+          this.vx += force * (dx / dist)
+          this.vy += force * (dy / dist)
+        }
+      }
+    })
+
+    this.x += this.vx
+    this.y += this.vy
+
+    this.vx *= 0.99
+    this.vy *= 0.99
+  }
 }
 
 balls.push(new Ball(canvas.width / 2, canvas.height / 2, 20, '#ff0000'))
