@@ -34,6 +34,17 @@ class Ball {
         const dx = other.x - this.x
         const dy = other.y - this.y
         const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (dist < this.radius + other.radius) {
+          if (this.radius > other.radius) {
+            this.radius = Math.sqrt(
+              this.radius * this.radius + other.radius * other.radius,
+            )
+            balls = balls.filter((b) => b !== other)
+          }
+          return
+        }
+
         if (dist > 0) {
           const force = (0.01 * (this.radius * other.radius)) / (dist * dist)
           this.vx += force * (dx / dist)
@@ -56,6 +67,7 @@ function loop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   balls.forEach((ball) => {
+    ball.update()
     ball.draw()
   })
 
