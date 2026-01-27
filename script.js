@@ -42,6 +42,16 @@ class Ball {
   }
 
   update() {
+    const dxm = mouseX - this.x
+    const dym = mouseY - this.y
+    const distm = Math.sqrt(dxm * dxm + dym * dym)
+
+    if (distm > 1) {
+      const force = (0.002 * this.radius * this.radius) / (distm * distm)
+      this.vx += force * (dxm / distm)
+      this.vy += force * (dym / distm)
+    }
+
     balls.forEach((other) => {
       if (other !== this) {
         const dx = other.x - this.x
