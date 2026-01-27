@@ -79,6 +79,22 @@ class Ball {
     this.x += this.vx
     this.y += this.vy
 
+    if (this.x < this.radius) {
+      this.x = this.radius
+      this.vx = -this.vx * 0.8
+    } else if (this.x > canvas.width - this.radius) {
+      this.x = canvas.width - this.radius
+      this.vx = -this.vx * 0.8
+    }
+
+    if (this.y < this.radius) {
+      this.y = this.radius
+      this.vy = -this.vy * 0.8
+    } else if (this.y > canvas.height - this.radius) {
+      this.y = canvas.height - this.radius
+      this.vy = -this.vy * 0.8
+    }
+
     this.vx *= 0.99
     this.vy *= 0.99
   }
