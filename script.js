@@ -14,6 +14,9 @@ let balls = []
 let mouseDown = false
 let draggedBall = null
 
+let mouseX = canvas.width / 2
+let mouseY = canvas.height / 2
+
 class Ball {
   constructor(x, y, radius, color) {
     this.x = x
@@ -110,6 +113,10 @@ canvas.addEventListener('mousedown', (e) => {
 })
 
 canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect()
+  mouseX = e.clientX - rect.left
+  mouseY = e.clientY - rect.top
+
   if (draggedBall) {
     draggedBall.x = e.clientX
     draggedBall.y = e.clientY
