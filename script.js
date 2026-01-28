@@ -25,6 +25,7 @@ class Ball {
     this.color = color
     this.vx = 0
     this.vy = 0
+    this.alive = true
   }
 
   draw() {
@@ -36,7 +37,7 @@ class Ball {
     ctx.scale(1 + speed * 0.1, 1 - speed * 0.05)
     ctx.beginPath()
     ctx.arc(0, 0, this.radius, 0, 2 * Math.PI)
-    ctx.fillStyle = this.color
+    ctx.fillStyle = `rgb(${this.color.r}, ${this.color.g}, ${this.color.b})`
     ctx.fill()
     ctx.restore()
   }
@@ -59,12 +60,17 @@ class Ball {
         const dist = Math.sqrt(dx * dx + dy * dy)
 
         if (dist < this.radius + other.radius) {
-          if (this.radius > other.radius) {
-            this.radius = Math.sqrt(
-              this.radius * this.radius + other.radius * other.radius,
-            )
+          if (this.radius > other.radius && other.alive) {
+            const r1 = this.radius
+            const r2 = other.radius
 
-            balls = balls.filter((b) => b !== other)
+            const a1 = r1 * r1
+            const a2 = r2 * r2
+
+            this.color = mixColors(this.color, other.color, a1, a2)
+            this.radius = Math.sqrt(a1 + a2)
+
+            other.alive = false
           }
           return
         }
@@ -101,36 +107,41 @@ class Ball {
   }
 }
 
-function mixColors(col1, col2, w1, w2) {
-  const r1 = parseInt(col1.slice(1, 3), 16)
-  const g1 = parseInt(col1.slice(3, 5), 16)
-  const b1 = parseInt(col1.slice(5, 7), 16)
+function mixColors(c1, c2, a1, a2) {
+  const total = a1 + a2
 
-  const r2 = parseInt(col2.slice(1, 3), 16)
-  const g2 = parseInt(col2.slice(3, 5), 16)
-  const b2 = parseInt(col2.slice(5, 7), 16)
-
-  const total = w1 + w2
-
-  const r = Math.round((r1 * w1 + r2 * w2) / total)
-  const g = Math.round((g1 * w1 + g2 * w2) / total)
-  const b = Math.round((b1 * w1 + b2 * w2) / total)
-
-  return `#${r.toString(16).padStart(2, '0')}${g
-    .toString(16)
-    .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+  return {
+    r: Math.round((c1.r * a1 + c2.r * a2) / total),
+    g: Math.round((c1.g * a1 + c2.g * a2) / total),
+    b: Math.round((c1.b * a1 + c2.b * a2) / total),
+  }
 }
 
-balls.push(new Ball(canvas.width / 2, canvas.height / 2, 20, '#ff0000'))
+function randomColor() {
+  return {
+    r: Math.floor(Math.random() * 256),
+    g: Math.floor(Math.random() * 256),
+    b: Math.floor(Math.random() * 256),
+  }
+}
+
+balls.push(new Ball(canvas.width / 2, canvas.height / 2, 20, randomColor()))
+
+let frame = 0
 
 function loop() {
+  frame++
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  balls.forEach((ball) => {
-    ball.update()
-    ball.draw()
-  })
+  balls.forEach((ball) => ball.update())
 
+  balls = balls.filter((ball) => ball.alive)
+
+  balls.forEach((ball) => ball.draw())
+
+  if (frame % 60 === 0) {
+    console.log('alive balls:', balls.length)
+  }
   requestAnimationFrame(loop)
 }
 
@@ -149,14 +160,7 @@ canvas.addEventListener('mousedown', (e) => {
       return
     }
   }
-  balls.push(
-    new Ball(
-      mx,
-      my,
-      Math.random() * 10 + 10,
-      `hsl(${Math.random() * 360}, 80%, 50%)`,
-    ),
-  )
+  balls.push(new Ball(mx, my, Math.random() * 10 + 10, randomColor()))
 })
 
 canvas.addEventListener('mousemove', (e) => {
