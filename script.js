@@ -63,6 +63,7 @@ class Ball {
             this.radius = Math.sqrt(
               this.radius * this.radius + other.radius * other.radius,
             )
+
             balls = balls.filter((b) => b !== other)
           }
           return
@@ -101,13 +102,13 @@ class Ball {
 }
 
 function mixColors(col1, col2, w1, w2) {
-  const r1 = parseInt(color1.slice(1, 3), 16)
-  const g1 = parseInt(color1.slice(3, 5), 16)
-  const b1 = parseInt(color1.slice(5, 7), 16)
+  const r1 = parseInt(col1.slice(1, 3), 16)
+  const g1 = parseInt(col1.slice(3, 5), 16)
+  const b1 = parseInt(col1.slice(5, 7), 16)
 
-  const r2 = parseInt(color2.slice(1, 3), 16)
-  const g2 = parseInt(color2.slice(3, 5), 16)
-  const b2 = parseInt(color2.slice(5, 7), 16)
+  const r2 = parseInt(col2.slice(1, 3), 16)
+  const g2 = parseInt(col2.slice(3, 5), 16)
+  const b2 = parseInt(col2.slice(5, 7), 16)
 
   const total = w1 + w2
 
