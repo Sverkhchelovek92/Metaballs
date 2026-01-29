@@ -31,10 +31,18 @@ class Ball {
   draw() {
     const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy)
     const angle = Math.atan2(this.vy, this.vx)
+
     ctx.save()
     ctx.translate(this.x, this.y)
     ctx.rotate(angle)
     ctx.scale(1 + speed * 0.1, 1 - speed * 0.05)
+
+    // Shadow
+    ctx.shadowBlur = this.radius * 0.1 + 10
+    ctx.shadowColor = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0.6)`
+    ctx.shadowOffsetX = 0
+    ctx.shadowOffsetY = 0
+
     ctx.beginPath()
     ctx.arc(0, 0, this.radius, 0, 2 * Math.PI)
     ctx.fillStyle = `rgb(${this.color.r}, ${this.color.g}, ${this.color.b})`
