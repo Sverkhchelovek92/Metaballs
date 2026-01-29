@@ -127,11 +127,10 @@ function randomColor() {
 
 balls.push(new Ball(canvas.width / 2, canvas.height / 2, 20, randomColor()))
 
-let frame = 0
-
 function loop() {
-  frame++
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  // ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   balls.forEach((ball) => ball.update())
 
@@ -139,9 +138,6 @@ function loop() {
 
   balls.forEach((ball) => ball.draw())
 
-  if (frame % 60 === 0) {
-    console.log('alive balls:', balls.length)
-  }
   requestAnimationFrame(loop)
 }
 
