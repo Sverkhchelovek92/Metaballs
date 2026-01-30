@@ -178,9 +178,26 @@ canvas.addEventListener('mousemove', (e) => {
     draggedBall.vx = e.movementX
     draggedBall.vy = e.movementY
   }
+
+  const x = e.clientX
+  const y = e.clientY
+
+  const nearLeft = x < TRIGGER_SIZE
+  const nearBottom = y > window.innerHeight - TRIGGER_SIZE
+
+  if (nearLeft && nearBottom) {
+    panel.classList.add('visible')
+  } else {
+    panel.classList.remove('visible')
+  }
 })
 
 canvas.addEventListener('mouseup', () => {
   mouseDown = false
   draggedBall = null
 })
+
+// UI
+const panel = document.getElementById('control-panel')
+
+const TRIGGER_SIZE = 80
