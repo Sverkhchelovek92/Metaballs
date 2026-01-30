@@ -8,3 +8,39 @@ canvas {
   display: block;
   background: #000;
 }
+
+#control-panel {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+
+  width: 240px;
+  padding: 16px;
+
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(10px);
+
+  color: white;
+  font-family: sans-serif;
+
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+
+  border-top-right-radius: 12px;
+}
+
+#control-panel.visible {
+  transform: translateY(0);
+}
+
+#control-panel label {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.panel-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
