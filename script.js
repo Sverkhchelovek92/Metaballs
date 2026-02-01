@@ -17,6 +17,9 @@ let draggedBall = null
 let mouseX = canvas.width / 2
 let mouseY = canvas.height / 2
 
+let attraction = 0.002
+let friction = 0.99
+
 class Ball {
   constructor(x, y, radius, color) {
     this.x = x
@@ -56,7 +59,7 @@ class Ball {
     const distm = Math.sqrt(dxm * dxm + dym * dym)
 
     if (distm > 1) {
-      const force = (0.002 * this.radius * this.radius) / (distm * distm)
+      const force = (attraction * this.radius * this.radius) / (distm * distm)
       this.vx += force * (dxm / distm)
       this.vy += force * (dym / distm)
     }
@@ -110,8 +113,8 @@ class Ball {
       this.vy = -this.vy * 0.8
     }
 
-    this.vx *= 0.99
-    this.vy *= 0.99
+    this.vx *= friction
+    this.vy *= friction
   }
 }
 
@@ -201,3 +204,17 @@ canvas.addEventListener('mouseup', () => {
 const panel = document.getElementById('control-panel')
 
 const TRIGGER_SIZE = 80
+
+const attractionSlider = document.getElementById('attraction-slider')
+const frictionSlider = document.getElementById('friction-slider')
+
+attractionStrength = parseFloat(attractionSlider.value)
+friction = parseFloat(frictionSlider.value)
+
+attractionSlider.addEventListener('input', (e) => {
+  attraction = parseFloat(e.target.value)
+})
+
+frictionSlider.addEventListener('input', (e) => {
+  friction = parseFloat(e.target.value)
+})
